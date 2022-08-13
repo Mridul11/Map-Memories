@@ -9,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.supercoolapps.mapmemories.MainActivity.Companion.EXTRA_MAP_TITLE
 import com.supercoolapps.mapmemories.databinding.ActivityCreateMapBinding
@@ -17,6 +18,7 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityCreateMapBinding
+    private var markers: MutableList<Marker> = mutableListOf<Marker>()
 
     companion object{
         const val TAG = "CreateMapActivity"
@@ -46,9 +48,16 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        mMap.setOnInfoWindowClickListener {markerToDelete ->
+            Log.i(TAG, "onWindowClickListener - delete this marker")
+            markers.remove(markerToDelete)
+            markerToDelete.remove()
+        }
         mMap.setOnMapLongClickListener {latLong ->
             Log.i(TAG,  "onMapClickListener!")
-            mMap.addMarker(MarkerOptions().position(latLong).title("My new marker").snippet("A cool snippet"))
+            val marker = mMap.addMarker(MarkerOptions().position(latLong).title("My new marker").snippet("A cool snippet"))
+            markers.add(marker!!)
         }
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
