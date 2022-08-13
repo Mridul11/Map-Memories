@@ -1,7 +1,9 @@
 package com.supercoolapps.mapmemories
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.supercoolapps.models.Place
@@ -11,15 +13,31 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var rvMaps : RecyclerView
 
+    companion object{
+        private const val TAG = "MainActivity"
+        const val EXTRA_USER_MAP = "EXTRA_USER_MAP"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        rvMaps = findViewById(R.id.rvMaps)
         val userMaps = generateSampleData()
         // set the layout manager on recycler view
         rvMaps.layoutManager = LinearLayoutManager(this)
         // set the adapter on the recycler view
-        rvMaps.adapter = MapsAdapter(this, userMaps)
+        rvMaps.adapter = MapsAdapter(this, userMaps, object : MapsAdapter.OnClickListener {
+            override fun onItemClick(position: Int) {
+                Log.i(TAG, "from Main activity! $position")
+                val intent = Intent(this@MainActivity, DisplayMapsActivity::class.java)
+                intent.putExtra(EXTRA_USER_MAP, userMaps[position])
+                startActivity(intent)
+            }
+        })
+
+        // navigate to another intent on click
+
     }
 
     private fun generateSampleData(): List<UserMap> {
