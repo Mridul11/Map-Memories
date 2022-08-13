@@ -29,6 +29,10 @@
             android:value="AIzaSyC8nBE0BvXkfqoKKVMs7eU3MGr_T5a9OK4" />
 
         <activity
+            android:name=".CreateMapActivity"
+            android:exported="false"
+            android:label="@string/title_activity_create_map" />
+        <activity
             android:name=".DisplayMapsActivity"
             android:exported="false"
             android:label="@string/title_activity_display_maps" />
